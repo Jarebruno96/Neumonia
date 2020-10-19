@@ -1,11 +1,12 @@
+import os
+from datetime import date
+import numpy as np
 from keras.models import Sequential, load_model
 from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, BatchNormalization, Dropout
-import numpy as np
 from sklearn.metrics import classification_report, confusion_matrix
-from datetime import date
-import os
-from mypprint import mypprint
 from sklearn.model_selection import train_test_split
+from mypprint import mypprint
+
 
 class TrainningOpts:
     epochs = 10
@@ -61,14 +62,6 @@ class LocalModel():
         matrix = confusion_matrix(yTest, yTestPredicted)
         metrics = self.model.evaluate_generator(datagenerator.flow(xTest, yTest), steps = len(yTest)/opts.batchSize)
         return matrix, metrics
-
-    def loadFromFile(self, file):
-        try:
-            self.model = load_model(file)
-        except OSError as err:
-            mypprint.printError("Can not load model from " + file)
-            return False
-        return True
 
     def save(self, modelFile):        
         self.model.save(modelFile)
