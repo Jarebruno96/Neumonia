@@ -16,11 +16,25 @@ import cv2
 from keras.preprocessing.image import ImageDataGenerator
 
 def usage():
-    mypprint.printText("main.py [-s data_source]")
+    mypprint.printBlue("python main.py")
+    mypprint.printBlue("\t -h --help: Shows help message")
+    mypprint.printBlue("\t -s --source: Read data from local source or google cloud platform.")
+    mypprint.printBlue("\t\t local (default): To read data from local. ")
+    mypprint.printBlue("\t\t gcp: To read data from Google Cloud Platform.")
+    mypprint.printBlue("\t -n --normalize: Normalize pixel values from 0 to 1.")
+    mypprint.printBlue("\t\t yes (default): Normalize pixel values from 0 to 1.")
+    mypprint.printBlue("\t\t no: Don't normalize pixel values from 0 to 1.")
+    mypprint.printBlue("\t -H --height: Height image size to be resized at preprocessing.")
+    mypprint.printBlue("\t -w --width: Widtht image size to be resized at preprocessing.")
+    mypprint.printBlue("\t -e --epochs: Number of epochs at trainning. 10 by default.")
+    mypprint.printBlue("\t -v --validationSplit: Percetange of validation at trainning from 0 to 1. 0.2 by default.")
+    mypprint.printBlue("\t -c --channel: Number of channels to be read from images.")
+    mypprint.printBlue("\t\t gray: Read images in gray scale.")
+    mypprint.printBlue("\t\t rgb (default): Read images in rgb scale.")
+
+
 
 def main(argv):
-
-    mypprint.printHeader("Neumonia use case")
 
     # Checking arguments
 
@@ -31,7 +45,7 @@ def main(argv):
     # Reading and parsing args
     try:
         opts, args = getopt.getopt(argv, 
-                                    "hs:n:H:w:e:v:f:c:", 
+                                    "hs:n:H:w:e:v:c:", 
                                     ["help", 
                                      "source=", 
                                      "normalize=", 
@@ -39,7 +53,6 @@ def main(argv):
                                      "width=", 
                                      "epochs=", 
                                      "validationSplit=",
-                                     "folder=",
                                      "channel="]
                                     )
     except getopt.GetoptError as err:
@@ -113,9 +126,6 @@ def main(argv):
                 usage()
                 mypprint.printError("Validation split argument not valid.")
                 sys.exit(2)
-
-        if opt in ("-f", "--folder"):
-            saveFolder = value
             
         if opt in ("-c", "--channel"):
             if value.lower() == "rgb":
@@ -126,7 +136,8 @@ def main(argv):
                 mypprint.printError("Channels option"+ value + " is not known")
                 usage()
                 sys.exit(2)
-
+    
+    mypprint.printHeader("Neumonia use case")
 
     mypprint.printBlue("######################################################################")
     mypprint.printBlue("## Reading images from " + retrieverOpts.source + " source")

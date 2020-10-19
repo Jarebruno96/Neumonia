@@ -6,6 +6,16 @@ function readImageURL(input){
 
         reader.onload = function(e){
             $("#imagePreview").attr('src', e.target.result);
+
+            var uploadButton = document.getElementById("uploadButton");
+            uploadButton.style.display = "block"
+
+            var imagePreview = document.getElementById("imagePreview");
+            imagePreview.style.display = "block"
+
+            var textPreview = document.getElementById("textPreview");
+            textPreview.style.display = "none"
+
         }
 
         reader.readAsDataURL(input.files[0])
@@ -27,12 +37,14 @@ function checkImage(){
         contentType: false,
         processData: false,
         success: function (response){
-            console.log("success")
             console.log(response)
+            var testResult = document.getElementById("testResult");
+            testResult.innerHTML = response["predictionResult"]
         },
         error: function(response){
-            console.log("error")
             console.log(response)
+            var testResult = document.getElementById("testResult");
+            testResult.innerHTML = "Can not get response from server"
         }
     })
 
@@ -41,10 +53,7 @@ function checkImage(){
 $("#fileInput").change(function(){
     
     readImageURL(this);
-    
-    var x = document.getElementById("uploadButton");
-    x.style.display = "block"
-    
+        
 })
 
 
