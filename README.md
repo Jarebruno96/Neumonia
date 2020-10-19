@@ -44,7 +44,7 @@ Los parámetros son:
 
 Tras la ejecución del dichero anterior, se creará un nuevo directorio en el que se almacenará la información del modelo creado.
 
-## Predecciones
+## Predicciones
 
 ### Servicio web
 
