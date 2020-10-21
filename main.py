@@ -5,7 +5,6 @@ from models.LocalModel import LocalModel, TrainningOpts
 from chestxrayretriever import chestxrayretriever
 import numpy as np
 from chestxrayprocessor import chestxrayprocessor
-from chestxrayprocessor.chestxrayprocessor import ProcessorOpts
 import time
 from datetime import datetime
 from keras import backend as K
@@ -31,6 +30,8 @@ def usage():
     mypprint.printBlue("\t -c --channel: Number of channels to be read from images.")
     mypprint.printBlue("\t\t gray: Read images in gray scale.")
     mypprint.printBlue("\t\t rgb (default): Read images in rgb scale.")
+    mypprint.printBlue("\t -k --gcpkey: Google key with Google Cloud Storage, at least with read permission. If it is not set, the virtual machine where the progam is running must have the permission")
+    mypprint.printBlue("\t -b --bucket: Google Cloud Storage Bucket where data is stored")
 
 
 
@@ -39,13 +40,13 @@ def main(argv):
     # Checking arguments
 
     retrieverOpts = chestxrayretriever.RetrieverOpts()
-    processorOpts = ProcessorOpts()
+    processorOpts = chestxrayprocessor.ProcessorOpts()
     trainningOpts = TrainningOpts()
 
     # Reading and parsing args
     try:
         opts, args = getopt.getopt(argv, 
-                                    "hs:n:H:w:e:v:c:", 
+                                    "hs:n:H:w:e:v:c:k:b:u:", 
                                     ["help", 
                                      "source=", 
                                      "normalize=", 
@@ -53,7 +54,11 @@ def main(argv):
                                      "width=", 
                                      "epochs=", 
                                      "validationSplit=",
-                                     "channel="]
+                                     "channel=",
+                                     "gcpkey=",
+                                     "bucket=",
+                                     "batch_size="
+                                     ]
                                     )
     except getopt.GetoptError as err:
         usage()
@@ -136,11 +141,19 @@ def main(argv):
                 mypprint.printError("Channels option"+ value + " is not known")
                 usage()
                 sys.exit(2)
+        
+        if opt in ("-k", "--gcpkey"):
+            retrieverOpts.googleStorageKey = value
+        
+        if opt in ("-u", "--bucket"):
+            retrieverOpts.bucket = value
     
     mypprint.printHeader("Neumonia use case")
 
     mypprint.printBlue("######################################################################")
     mypprint.printBlue("## Reading images from " + retrieverOpts.source + " source")
+    if retrieverOpts.source == chestxrayretriever.GCP_SOURCE:
+        mypprint.printBlue("## Bucket name: " + retrieverOpts.bucket)
     mypprint.printBlue("## Images options:")
     mypprint.printBlue("##     Dimesions: " + str(processorOpts.height)  + "x" + str(processorOpts.width))
     mypprint.printBlue("##     Channels: " + str(processorOpts.channels) + " " + ("(RGB)" if processorOpts.channels == 3 else "(Gray)"))
@@ -168,8 +181,8 @@ def detectPneumonia(retrieverOpts, processorOpts, trainningOpts):
     #Getting data for training
 
     mypprint.printText("Reading images files from " + retrieverOpts.source + " source")
-    xTrain, yTrain = chestxrayretriever.getTrainData(retrieverOpts.source, processorOpts.channels)
-    xTest, yTest = chestxrayretriever.getTestData(retrieverOpts.source, processorOpts.channels)
+    xTrain, yTrain = chestxrayretriever.getTrainData(retrieverOpts, processorOpts)
+    xTest, yTest = chestxrayretriever.getTestData(retrieverOpts, processorOpts)
 
     mypprint.printText("Number of normal samples: " + str(np.count_nonzero(yTrain==0)))
     mypprint.printText("Number of pneumonia samples: " + str(np.count_nonzero(yTrain)))
