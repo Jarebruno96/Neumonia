@@ -26,12 +26,13 @@ def usage():
     mypprint.printBlue("\t -H --height: Height image size to be resized at preprocessing.")
     mypprint.printBlue("\t -w --width: Widtht image size to be resized at preprocessing.")
     mypprint.printBlue("\t -e --epochs: Number of epochs at trainning. 10 by default.")
+    mypprint.printBlue("\t -b --batch_size: Batch size at trainning. 32 by default.")
     mypprint.printBlue("\t -v --validationSplit: Percetange of validation at trainning from 0 to 1. 0.2 by default.")
     mypprint.printBlue("\t -c --channel: Number of channels to be read from images.")
     mypprint.printBlue("\t\t gray: Read images in gray scale.")
     mypprint.printBlue("\t\t rgb (default): Read images in rgb scale.")
     mypprint.printBlue("\t -k --gcpkey: Google key with Google Cloud Storage, at least with read permission. If it is not set, the virtual machine where the progam is running must have the permission")
-    mypprint.printBlue("\t -b --bucket: Google Cloud Storage Bucket where data is stored")
+    mypprint.printBlue("\t -u --bucket: Google Cloud Storage Bucket where data is stored")
 
 
 

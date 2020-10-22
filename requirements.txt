@@ -1,0 +1,13 @@
+#Packages
+
+Keras==2.2.4
+opencv-python==4.1.0.25
+google-cloud-storage==1.32.0
+scikit-learn==0.19.1
+Flask==1.0.2
+jsonpickle==1.4.1
+Pillow==5.1.0
+matplotlib==2.2.2
+more-itertools==4.1.0
+numpy==1.16.3
+tensorflow==1.13.1
