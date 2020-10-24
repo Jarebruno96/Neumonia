@@ -16,7 +16,7 @@ La neumonia por inhalacion se debe a microorganismos que sobreviven lo suficient
 
 ## Objetivo
 
-Se pretende crear un modelo capaz de predecir a partir de una imagen de una radiografía del pecho, si el paciente tiene o no neumonía
+Se pretende crear un modelo capaz de predecir a partir de una imagen de una radiografía del pecho, si el paciente tiene o no neumonía. Para ello, se hará uso del dataset público de Kaggle: https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia
 
 ## Creación del modelo
 

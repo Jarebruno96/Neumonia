@@ -1,22 +1,21 @@
-import os
-from datetime import date
-import numpy as np
-from keras.models import Sequential, load_model
+from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, BatchNormalization, Dropout
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
-from mypprint import mypprint
 
 
-class TrainningOpts:
+
+class TrainingOpts:
     epochs = 10
     batchSize = 32
     validationSplit = 0.2
 
 
-class LocalModel():
+class BinaryClassificationModel():
 
-    def __init__(self, inputShape):
+    def __init__(self, processorOpts):
+
+        inputShape = (processorOpts.height, processorOpts.width, processorOpts.channels)
 
         self.model = Sequential()
 
@@ -45,7 +44,7 @@ class LocalModel():
         self.model.summary()
 
 
-    def train(self, xTrain, yTrain, datagenerator, opts = TrainningOpts()):
+    def train(self, xTrain, yTrain, datagenerator, opts = TrainingOpts()):
 
         x_train, x_val, y_train, y_val = train_test_split(xTrain, yTrain, test_size = opts.validationSplit)
 
@@ -55,18 +54,39 @@ class LocalModel():
             epochs = opts.epochs, 
             steps_per_epoch = len(yTrain)/opts.batchSize)
 
+    def save(self, path):
+    
+        self.model.save(path)
+    
+    def getModelSummary(self):
+        
+        lines = []
+        self.model.summary(print_fn=lambda x: lines.append(x))
+        
+        return "\n".join(lines)
+
+
     def predict(self, xVal):
+
         return self.model.predict(xVal)
 
-    def evaluate(self, xTest, yTest, yTestPredicted, datagenerator, opts = TrainningOpts()):
-        matrix = confusion_matrix(yTest, yTestPredicted)
-        metrics = self.model.evaluate_generator(datagenerator.flow(xTest, yTest), steps = len(yTest)/opts.batchSize)
-        return matrix, metrics
+    def parsePredicctions(self, predictions):
 
-    def save(self, modelFile):        
-        self.model.save(modelFile)
+        for index, prediction in enumerate(predictions):
+            
+            if prediction <= 0.5:
+                predictions[index] = 0
+            else:
+                predictions[index] = 1
+        
+        return predictions
+
+
+    def getMetrics(self, cases, solutions, datagenerator, opts = TrainingOpts()):
+
+        return self.model.evaluate_generator(datagenerator.flow(cases, solutions), steps = len(solutions)/opts.batchSize)
+
     
-    def saveModelSummary(self, folder):
-        with open(os.path.join(folder, "summary.txt"), "w") as fp:
-            self.model.summary(print_fn=lambda x: fp.write(x + '\n'))
-
+    def getConfusionMatrix(self, solutions, predictions):
+        
+        return confusion_matrix(solutions, predictions)
