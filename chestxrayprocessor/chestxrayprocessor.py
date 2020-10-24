@@ -1,6 +1,6 @@
-from mypprint import mypprint
 import cv2
 import numpy as np
+
 
 
 class ProcessorOpts:
@@ -8,6 +8,7 @@ class ProcessorOpts:
     height = 1200
     width = 1200
     channels = 3
+
 
 def processImages(images, opts):
 
@@ -25,21 +26,24 @@ def processImages(images, opts):
 
     return imagesProccesed
 
+
 def processImage(image, opts):
 
-    # Reshape image
     image = reshapeImage(image, opts)
 
-    # Normalize image
     if opts.normalize == True:
         image = normalizeImage(image)
     
     return image
 
+
 def normalizeImage(image):
+
     return image / 255.
 
+
 def reshapeImage(image, opts):
+
     if opts.channels == 3:
         return cv2.resize(image, (opts.height, opts.width))
     else:

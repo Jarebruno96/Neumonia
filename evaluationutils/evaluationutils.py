@@ -1,42 +1,15 @@
+import numpy as np
 import itertools
 import matplotlib.pyplot as plt
-import numpy as np
-import os
-import json
-
-def saveModelInfo(processorOpts, trainningOpts, preprocessingTime, trainningTime, metrics, confusionMatrix, classes, folderPath):
-
-    if not os.path.exists(folderPath):
-        os.mkdir(folderPath)
-    
-    parametersFilePath = os.path.join(folderPath, "parametersSummary.json")
-    cmFilePath = os.path.join(folderPath, "confusionMatrix.png")
-    modelSummaryFilePath = os.path.join(folderPath, "modelSummary.txt")
 
 
-    parameters = {
-        "Training seconds" : trainningTime,
-        "Processing seconds" : preprocessingTime,
-        "Accuracy" : metrics[1]*100,
-        "Loss" : metrics[0],
-        "Image height" : processorOpts.height,
-        "Image width" : processorOpts.width,
-        "Epochs" : trainningOpts.epochs,
-        "Batch Size" : trainningOpts.batchSize,
-        "Channels" : processorOpts.channels,
-        "Validation split " : trainningOpts.validationSplit,
-        "Normalize" : processorOpts.normalize
-    }
 
-    with open(parametersFilePath, "w") as fp:
-        json.dump(parameters, fp)
-        
-    saveConfusionMatrix(confusionMatrix, classes, cmFilePath)
-    
-def saveConfusionMatrix (cm, classes, filePath, normalize = False, title = "Confusion Matrix", cmap = plt.cm.Blues ):
+def buildConfusionMatrixPlot (confusionMatrix, classes, xLabel = "", yLabel = "", title = "", normalize = False, colorMap = plt.cm.Blues ):
 
-    plt.clf()
-    plt.imshow(cm, interpolation="nearest", cmap = cmap)
+    #plt.clf()
+    fig = plt.figure()
+
+    plt.imshow(confusionMatrix, interpolation="nearest", cmap = colorMap)
     plt.title(title)
     plt.colorbar()
 
@@ -45,39 +18,33 @@ def saveConfusionMatrix (cm, classes, filePath, normalize = False, title = "Conf
     plt.yticks(tickMarks, classes)
 
     if normalize:
-        cm = cm.astype("float") / cm.sum(axis = 1) [:, np.newaxis]
+        confusionMatrix = confusionMatrix.astype("float") / confusionMatrix.sum(axis = 1) [:, np.newaxis]
 
-    thresh = cm.max() / 2.
+    thresh = confusionMatrix.max() / 2.
 
-    for i,j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+    for i,j in itertools.product(range(confusionMatrix.shape[0]), range(confusionMatrix.shape[1])):
 
-        plt.text(j, i, cm[i,j],
+        plt.text(j, i, confusionMatrix[i,j],
             horizontalalignment = "center",
-            color = "white" if cm[i,j] > thresh else "black")
+            color = "white" if confusionMatrix[i,j] > thresh else "black")
 
     plt.tight_layout()
-    plt.ylabel("True label")
-    plt.xlabel("Predicted label")
+    plt.ylabel(xLabel)
+    plt.xlabel(yLabel)
 
-    plt.savefig(filePath)
+    return fig
 
-def saveModelHistory(historyTrain, folderPath):
 
-    plt.clf()
-    plt.plot(historyTrain.history["acc"])
-    plt.plot(historyTrain.history["val_acc"])
-    plt.title("Model accuracy")
-    plt.xlabel("Epoch")
-    plt.ylabel("Accuracy")
-    plt.legend(["train", "test"], loc = "upper left")
-    plt.savefig(os.path.join(folderPath, "Accuracy.png"))
+def buildPlot(title = "", xLabel = "", yLabel = "", legend = [""], series=[]):
 
-    plt.clf()
-    plt.plot(historyTrain.history["loss"])
-    plt.plot(historyTrain.history["val_loss"])
-    plt.title("Model loss")
-    plt.xlabel("Epoch")
-    plt.ylabel("Loss")
-    plt.legend(["train", "test"], loc = "upper left")
-    plt.savefig(os.path.join(folderPath, "Loss.png"))
-    
+    fig = plt.figure()
+
+    for serie in series:
+        plt.plot(serie)
+
+    plt.title(title)
+    plt.xlabel(xLabel)
+    plt.ylabel(yLabel)
+    plt.legend(legend, loc = "upper left")
+
+    return fig
