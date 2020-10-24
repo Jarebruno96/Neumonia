@@ -16,7 +16,6 @@ def main(argv):
     # Reading, parsing and printing arguments
     
     ioOpts, processorOpts, trainingOpts = osutils.parseArgs(argv)
-    #mypprint.printWarning("Por aqui")
     osutils.printArguments(ioOpts, processorOpts, trainingOpts)
 
     # Create local folder or get bucket pointer

@@ -1,12 +1,13 @@
 import numpy as np
 import itertools
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
 
 def buildConfusionMatrixPlot (confusionMatrix, classes, xLabel = "", yLabel = "", title = "", normalize = False, colorMap = plt.cm.Blues ):
 
-    #plt.clf()
     fig = plt.figure()
 
     plt.imshow(confusionMatrix, interpolation="nearest", cmap = colorMap)
