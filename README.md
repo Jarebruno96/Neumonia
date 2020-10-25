@@ -22,7 +22,7 @@ The aim is to create a model capable of predicting from a chest X-ray image whet
 <br></br>
 ## Model creation
 
-To create the model, use the file ** main.py **. The correct way to use this file is attached below
+To create the model, use the file **main.py**. The correct way to use this file is attached below
 
 python main.py
 
@@ -54,7 +54,7 @@ After executing the previous file, a new directory will be created in which the 
 
 ### Web service
 
-In order to make predictions of images that the model has never seen before, a web service has been developed using Flask. This web service corresponds to the file ** webservice.py **. The correct way to activate the service is as follows:
+In order to make predictions of images that the model has never seen before, a web service has been developed using Flask. This web service corresponds to the file **webservice.py**. The correct way to activate the service is as follows:
 
 python webservice.py
   - -h --help: Shows help message
@@ -79,7 +79,7 @@ The accessible methods of this web service are as follows:
     - Normal: Indicates that the patient **does not have** pneumonia
     - Pneumonia: Indicates that the patient **has** pneumonia
 
-
+<br></br>
 ### Web Page
 
 
