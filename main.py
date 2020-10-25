@@ -10,7 +10,6 @@ from keras.preprocessing.image import ImageDataGenerator
 from evaluationutils import evaluationutils
 
 
-
 def main(argv):
 
     # Reading, parsing and printing arguments

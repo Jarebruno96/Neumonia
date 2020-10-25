@@ -37,6 +37,18 @@ def processImage(image, opts):
     return image
 
 
+def parseRequestImage(image, opts):
+    
+    if opts.channels == 1:
+        if len(image.shape) == 3:
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    else:
+        if len(image.shape) == 2:
+            image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGRc)
+
+    return processImage(image, opts)
+
+
 def normalizeImage(image):
 
     return image / 255.
