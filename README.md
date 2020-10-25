@@ -67,20 +67,20 @@ python webservice.py
 
 The accessible methods of this web service are as follows:
 
-- / status allows to know the status of the service. If it works properly, a ** OK ** will be returned
+- / status allows to know the status of the service. If it works properly, a **OK** will be returned
 
 - / predict allows that, after passing an image of a chest x-ray of a patient, if he has pneumonia or not. This method will return the following information:
   - original: Information about the original image
   - proccessed: Information about the preprocessed image and provided to the model to be able to make its prediction
   - prediction: Value between 0 and 1 where:
-    - 0: Indicates that the patient ** does not ** have pneumonia
-    - 1: Indicates that the patient ** yes ** has pneumonia
+    - 0: Indicates that the patient **does not have** pneumonia
+    - 1: Indicates that the patient **has** pneumonia
   - predictionResult: Result of the prediction where:
-    - Normal: Indicates that the patient ** does not ** have pneumonia
-    - Pneumonia: Indicates that the patient ** yes ** has pneumonia
+    - Normal: Indicates that the patient **does not have** pneumonia
+    - Pneumonia: Indicates that the patient **has** pneumonia
 
 
 ### Web Page
 
 
-A web page ** web page / index.html ** has been developed to make use of the aforementioned web service in a simple way. On this website, an image can be uploaded by the user of the model in order to know if the selected image represents pneumonia or not.
+A web page **web page / index.html** has been developed to make use of the aforementioned web service in a simple way. On this website, an image can be uploaded by the user of the model in order to know if the selected image represents pneumonia or not.
