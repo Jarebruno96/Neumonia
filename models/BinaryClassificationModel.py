@@ -58,6 +58,7 @@ class BinaryClassificationModel():
     
         self.model.save(path)
     
+
     def getModelSummary(self):
         
         lines = []
@@ -69,6 +70,7 @@ class BinaryClassificationModel():
     def predict(self, xVal):
 
         return self.model.predict(xVal)
+
 
     def parsePredicctions(self, predictions):
 

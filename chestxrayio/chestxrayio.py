@@ -5,6 +5,8 @@ import numpy as np
 from datetime import datetime
 from google.cloud import storage
 import json
+from keras.models import load_model
+from chestxrayprocessor.chestxrayprocessor import ProcessorOpts
 
 GCP_SOURCE = "gcp"
 LOCAL_SOURCE = "local"
@@ -127,6 +129,11 @@ def uploadFileTOGCPStorage(fileName, ioOpts):
     blob.upload_from_filename(fileName)
 
 
+def downloadFileFromGCGStorage(fileName, ioOpts):
+
+    blob = ioOpts.bucket.blob(ioOpts.modelFolder + os.sep + fileName)
+    blob.download_to_filename(fileName)
+    
 def saveImage(imageName, image, ioOpts):
     
     if ioOpts.source == LOCAL_SOURCE:
@@ -207,3 +214,36 @@ def deleteFile(fileName):
         os.remove(fileName)
     except OSError as e:
         mypprint.printError("Can not delete " + fileName + ". " + str(e))
+
+
+def loadModel(fileName, ioOpts):
+    
+    if ioOpts.source == LOCAL_SOURCE:
+        model = load_model(os.path.join(ioOpts.modelFolder, fileName))
+    else:
+        downloadFileFromGCGStorage(fileName, ioOpts)
+        model = load_model(fileName)
+        deleteFile(fileName)
+
+    model._make_predict_function()
+    return model
+
+
+def loadPreprocesingOpts(fileName, ioOpts):
+
+    if ioOpts.source == LOCAL_SOURCE:
+        with open(os.path.join(ioOpts.modelFolder, fileName)) as fp:
+            conf = json.load(fp)
+    else:
+        downloadFileFromGCGStorage(fileName, ioOpts)
+        with open(fileName) as fp:
+            conf = json.load(fp)
+        deleteFile(fileName)
+
+    opts = ProcessorOpts
+    opts.channels = conf["Channels"]
+    opts.height = conf["Image height"]
+    opts.width = conf["Image width"]
+    opts.normalize = conf["Normalize"]
+
+    return opts
